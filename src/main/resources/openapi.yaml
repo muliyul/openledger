@@ -1,0 +1,19 @@
+openapi: 3.1.0
+resourcePackages:
+  - com.muliyul
+prettyPrint: true
+readerClass: com.muliyul.kropwizard.infra.openapi.DropwizardCompatibleReader
+modelConverterClasses:
+  - com.muliyul.kropwizard.infra.openapi.CoroutineAwareModelConverter
+components:
+  securitySchemes:
+    Basic:
+      type: http
+      scheme: basic
+security:
+  - Basic: [ ]
+info:
+  title: Spark API
+  description: ""
+  version: 0.1a
+cacheTTL: 0

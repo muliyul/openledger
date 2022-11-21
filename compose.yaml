@@ -1,0 +1,45 @@
+---
+version: '3'
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3306:3306'
+      - '33060:33060'
+
+  adminer:
+    depends_on:
+      - db
+    image: adminer
+    restart: always
+    ports:
+      - '3307:8080'
+
+  keycloak:
+    image: quay.io/keycloak/keycloak
+    environment:
+      DB_VENDOR: MYSQL
+      DB_ADDR: mysql
+      DB_DATABASE: keycloak
+      DB_USER: root
+      DB_PASSWORD: root
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the MySQL JDBC driver documentation in order to use it.
+      #JDBC_PARAMS: "connectTimeout=30000"
+    ports:
+      - "8433:8080"
+    depends_on:
+      - db
+    entrypoint: [ "/opt/keycloak/bin/kc.sh", "start-dev" ]
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    environment:
+      SWAGGER_JSON_URL: http://localhost:8080/openapi.json
+    ports:
+      - '9999:8080'
